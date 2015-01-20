@@ -4,7 +4,7 @@
 #define BUTTON_PIN 4
 #define ENABLE_PIN 7
 
-#define speed_delay 3000
+#define speed_delay 750
 
 
 int buttonState =0;
@@ -28,8 +28,8 @@ void loop() {
   
    if(buttonState==HIGH)                      // check for button or sensor 
   {
-    Rotate(5,HIGH);                           //5 rotation of stepper gear forward 
-    Rotate(5,LOW);                            //5 rotation of stepper gear backward
+    Rotate(1,HIGH);                           //5 rotation of stepper gear forward 
+   // Rotate(5,LOW);                            //5 rotation of stepper gear backward
   }
   
 }
