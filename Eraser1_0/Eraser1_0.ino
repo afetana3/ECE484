@@ -28,8 +28,8 @@ void loop() {
   
    if(buttonState==HIGH)                      // check for button or sensor 
   {
-    Rotate(5,HIGH);                           //5 rotation of servo gear forward 
-    Rotate(5,LOW);                            //5 rotation of servo gear backward
+    Rotate(5,HIGH);                           //5 rotation of stepper gear forward 
+    Rotate(5,LOW);                            //5 rotation of stepper gear backward
   }
   
 }
