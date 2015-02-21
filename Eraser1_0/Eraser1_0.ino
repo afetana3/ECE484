@@ -4,7 +4,7 @@
 #define BUTTON_PIN 4
 #define ENABLE_PIN 7
 
-#define speed_delay 750
+#define speed_delay 350
 
 
 int buttonState =0;
@@ -40,7 +40,7 @@ void Rotate(int rotations ,int dir){
     digitalWrite(ENABLE_PIN,LOW);            // Enable should be low for motor to start 
     digitalWrite(DIR_PIN,dir);               //Setting up direction base on function input
   
-    int steps = rotations*200;               //calculating number of steps
+    int steps = rotations*200*19;               //calculating number of steps
     // doing each stap and have a delay in between to make it slower 
     for(int i=0; i < steps; i++)
     { 
