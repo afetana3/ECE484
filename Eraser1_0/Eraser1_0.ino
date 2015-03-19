@@ -28,14 +28,54 @@ void loop() {
   
    if(buttonState==HIGH)                      // check for button or sensor 
   {
+    closeLid();
     Rotate(1,HIGH);                           //5 rotation of stepper gear forward 
-   // Rotate(5,LOW);                            //5 rotation of stepper gear backward
+    //Rotate(1,LOW);                            //5 rotation of stepper gear backward
+    openLid();
   }
   
 }
 
 //Check speed and direction and # rotation base on 200 step = 1 rotation 
 void Rotate(int rotations ,int dir){  
+ 
+    digitalWrite(ENABLE_PIN,LOW);            // Enable should be low for motor to start 
+    digitalWrite(DIR_PIN,dir);               //Setting up direction base on function input
+  
+    int steps = rotations*200*19;               //calculating number of steps
+    // doing each stap and have a delay in between to make it slower 
+    for(int i=0; i < steps; i++)
+    { 
+      digitalWrite(STEP_PIN, HIGH);          // one step on 
+      delayMicroseconds(speed_delay);        // delay 
+      digitalWrite(STEP_PIN, LOW);           //stop 
+      delayMicroseconds(speed_delay);        //dealy
+    }  
+    
+  digitalWrite(ENABLE_PIN,HIGH);  
+}
+void openLid(){  
+    int rotations = 1;
+    int dir=HIGH;
+    
+    digitalWrite(ENABLE_PIN,LOW);            // Enable should be low for motor to start 
+    digitalWrite(DIR_PIN,dir);               //Setting up direction base on function input
+  
+    int steps = rotations*200*19;               //calculating number of steps
+    // doing each stap and have a delay in between to make it slower 
+    for(int i=0; i < steps; i++)
+    { 
+      digitalWrite(STEP_PIN, HIGH);          // one step on 
+      delayMicroseconds(speed_delay);        // delay 
+      digitalWrite(STEP_PIN, LOW);           //stop 
+      delayMicroseconds(speed_delay);        //dealy
+    }  
+    
+  digitalWrite(ENABLE_PIN,HIGH);  
+}
+void closeLid(){  
+  int rotations = 1;
+  int dir = LOW;
  
     digitalWrite(ENABLE_PIN,LOW);            // Enable should be low for motor to start 
     digitalWrite(DIR_PIN,dir);               //Setting up direction base on function input
