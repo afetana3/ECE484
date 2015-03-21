@@ -8,11 +8,12 @@
 #define DIR_PIN_LID 8
 #define STEP_PIN_LID 5
 #define ENABLE_PIN_LID 12
-// speed
-#define speed_delay 350        // higher speed delay = lower speed 
+// speeds
+#define speed_delay_cleaner 350        // higher speed delay = lower speed 
+#define speed_delay_delay   350        // higher speed delay = lower speed
 
 //Initilization 
-int buttonState =0;            //setting button state to be zero to make sure safe start
+int buttonState =0;                    //setting button state to be zero to make sure safe start
 
 // setting up pins
 void setup() { 
@@ -91,7 +92,7 @@ void rotateCleaner(int rotations ,int dir){
       digitalWrite(STEP_PIN_CLEANER, HIGH);            // one step on 
       delayMicroseconds(speed_delay);                 // delay 
       digitalWrite(STEP_PIN_CLEANER, LOW);           //stop 
-      delayMicroseconds(speed_delay);               //dealy
+      delayMicroseconds(speed_delay_cleaner);       //dealy
     }  
     
   digitalWrite(ENABLE_PIN_CLEANER,HIGH);  
@@ -113,7 +114,7 @@ void rotateLid(int rotations ,int dir){
       digitalWrite(STEP_PIN_LID, HIGH);                 // one step on 
       delayMicroseconds(speed_delay);                  // delay 
       digitalWrite(STEP_PIN_LID, LOW);                //stop 
-      delayMicroseconds(speed_delay);                //dealy
+      delayMicroseconds(speed_delay_lid);            //dealy
     }  
     
   digitalWrite(ENABLE_PIN_LID,HIGH);  
