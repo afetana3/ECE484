@@ -10,6 +10,8 @@
 #define ENABLE_PIN_LID 12
 //IR Sensor Pins
 #define IR_SENSOR-PIN 0
+//Pressure Sensor
+#define Pressure_Sensor_PIN 1
 // speeds
 #define speed_delay_cleaner 350        // higher speed delay = lower speed 
 #define speed_delay_lid   350        // higher speed delay = lower speed
@@ -42,7 +44,7 @@ void loop() {
                                               
                                               //we are going to have check for sensor
   
-   if(buttonState==HIGH || safeToTrigger())                      // check for button or sensor 
+   if((buttonState==HIGH || safeToTrigger()) && nobodySeating())                      // check for button or sensor 
   {
     closeLid();
     delay(500);
@@ -123,8 +125,9 @@ void rotateLid(int rotations ,int dir){
     
   digitalWrite(ENABLE_PIN_LID,HIGH);  
 }
-
-//not complete
+/////////////////////////////////////////////////////////////////////////////
+//                         Safe Trigger
+/////////////////////////////////////////////////////////////////////////////
 boolean safeToTrigger(){
   boolean safeToTrigger =false;
   int sensorPresentHighLimit= 700;
@@ -153,7 +156,11 @@ boolean safeToTrigger(){
   return safeToTrigger;
 }
 
+/////////////////////////////////////////////////////////////////////////////
+//                       Person Present  
+/////////////////////////////////////////////////////////////////////////////
 boolean irSensorPresentCheck(){
+  //limits - it need to be defined 
   int sensorPresentHighLimit= 700;
   int sensorPresentLowLimit=100;
   int sensorNotPresentHighLimit=60;
@@ -191,15 +198,19 @@ boolean irSensorPresentCheck(){
   
   return true ;
 }
+/////////////////////////////////////////////////////////////////////////////
+//                         Person Not present
+/////////////////////////////////////////////////////////////////////////////
 boolean irSensorNotPresentCheck(){
+  //limits - it need to be defined above 
   int sensorPresentHighLimit= 700;
   int sensorPresentLowLimit=100;
   int sensorNotPresentHighLimit=60;
   int sensorNotPresentLowLimit=0;
    
   int i;
- for(i=0;i<200;i++){
-  if (analogRead(0) < sensorPresentHighLimit && analogRead(0) > sensorPresentLowLimit ){
+ for(i=0;i<300;i++){                                                                            // 2 seacond dealy and checking if person present
+  if (analogRead(0) < sensorPresentHighLimit && analogRead(0) > sensorPresentLowLimit ){        // if person present then return true
     Serial.println("here");
     return true; //wrong trigger
        
@@ -207,7 +218,20 @@ boolean irSensorNotPresentCheck(){
     delay(10);
  }
  
- return false;
+ return false;                                                                                // if person not present then return false
+}
+/////////////////////////////////////////////////////////////////////////////
+//                         Nobay Seating
+/////////////////////////////////////////////////////////////////////////////
+boolean nobodySeating(){
+  boolean seating = false ;
+  int sensorHighLimit = 0;
+  int sensorLowLimit =0;
+  
+  if(analogRead(1)< sensorHighLimit && analogRead(1)> sensorLowLimt ){                     //check if somebody seating 
+    return flase ;
+  }
+  return true;                                                                            //retuen true if nobody seating
 }
 
 
