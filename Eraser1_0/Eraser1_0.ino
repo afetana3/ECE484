@@ -1,13 +1,13 @@
 
 //Cleaner Pins
-#define DIR_PIN_CLEANER 2
-#define STEP_PIN_CLEANER 3
+#define DIR_PIN_CLEANER 7
+#define STEP_PIN_CLEANER 8
 #define BUTTON_PIN 4
-#define ENABLE_PIN_CLEANER 7
+#define ENABLE_PIN_CLEANER 13
 //Lid Pins
-#define DIR_PIN_LID 8
-#define STEP_PIN_LID 5
-#define ENABLE_PIN_LID 12
+#define DIR_PIN_LID 0
+#define STEP_PIN_LID 1
+#define ENABLE_PIN_LID 6
 //IR Sensor Pins
 #define IR_SENSOR-PIN 0
 //Pressure Sensor
@@ -225,8 +225,8 @@ boolean irSensorNotPresentCheck(){
 /////////////////////////////////////////////////////////////////////////////
 boolean nobodySeating(){
   boolean seating = false ;
-  int sensorHighLimit = 0;
-  int sensorLowLimit =0;
+  int sensorHighLimit = 11;
+  int sensorLowLimit =7;
   
   if(analogRead(1)< sensorHighLimit && analogRead(1)> sensorLowLimt ){                     //check if somebody seating 
     return flase ;
