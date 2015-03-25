@@ -1,24 +1,28 @@
 
 //Cleaner Pins
-#define DIR_PIN_CLEANER 7
-#define STEP_PIN_CLEANER 8
+#define DIR_PIN_CLEANER 0
+#define STEP_PIN_CLEANER 1
 #define BUTTON_PIN 4
-#define ENABLE_PIN_CLEANER 13
+#define ENABLE_PIN_CLEANER 6
 //Lid Pins
-#define DIR_PIN_LID 0
-#define STEP_PIN_LID 1
-#define ENABLE_PIN_LID 6
+#define DIR_PIN_LID 7
+#define STEP_PIN_LID 8
+#define ENABLE_PIN_LID 13
 //IR Sensor Pins
 #define IR_SENSOR-PIN 0
 //Pressure Sensor
 #define Pressure_Sensor_PIN 1
 // speeds
 #define speed_delay_cleaner 350        // higher speed delay = lower speed 
-#define speed_delay_lid   350        // higher speed delay = lower speed
+#define speed_delay_lid   450        // higher speed delay = lower speed
 
 //Initilization 
 int buttonState =0;                    //setting button state to be zero to make sure safe start
 boolean personPresent = false;
+int sensorPresentHighLimit= 700;
+  int sensorPresentLowLimit=300;
+  int sensorNotPresentHighLimit=250;
+  int sensorNotPresentLowLimit=0;
 
 // setting up pins
 void setup() { 
@@ -28,7 +32,7 @@ void setup() {
   //pinMode(STEP_PIN_CLEANER, OUTPUT);                   //Step pin for Stepper motor
  // pinMode(ENABLE_PIN_CLEANER,OUTPUT);                  //Enable pin for stepper motor
   
-  pinMode(BUTTON_PIN,INPUT);                           //Switch PIN     
+ // pinMode(BUTTON_PIN,INPUT);                           //Switch PIN     
   
   // Lid Pin Initilization 
   pinMode(DIR_PIN_LID, OUTPUT);                        //Direction PIN for Stepper motor  
@@ -40,14 +44,17 @@ void setup() {
 }
 
 void loop() {    
-  buttonState = digitalRead(BUTTON_PIN);      //Check for Switch
+  //buttonState = digitalRead(BUTTON_PIN);      //Check for Switch
                                               
                                               //we are going to have check for sensor
+                                              
+     
   
-   if((buttonState==HIGH || safeToTrigger()) && nobodySeating())                      // check for button or sensor 
+   if(safeToTrigger() && nobodySeating()  )                      // check for button or sensor 
   {
+    Serial.println("inside");
     closeLid();
-    delay(500);
+    delay(1500);
     //startCleaning();
     delay(500);
     openLid();
@@ -113,7 +120,7 @@ void rotateLid(int rotations ,int dir){
     digitalWrite(ENABLE_PIN_LID,LOW);                    // Enable should be low for motor to start 
     digitalWrite(DIR_PIN_LID,dir);                      //Setting up direction base on function input
   
-    int steps = rotations*200*27;//calculating number of steps
+    int steps = rotations*200*19;//calculating number of steps
     // doing each stap and have a delay in between to make it slower 
     for(int i=0; i < steps; i++)
     { 
@@ -130,16 +137,13 @@ void rotateLid(int rotations ,int dir){
 /////////////////////////////////////////////////////////////////////////////
 boolean safeToTrigger(){
   boolean safeToTrigger =false;
-  int sensorPresentHighLimit= 700;
-  int sensorPresentLowLimit=100;
-  int sensorNotPresentHighLimit=60;
-  int sensorNotPresentLowLimit=0;
+  
   int IR_Sensor = analogRead(0);
   Serial.println(IR_Sensor);
   int i =0;
   
   if (analogRead(0) < sensorPresentHighLimit && analogRead(0) > sensorPresentLowLimit && !personPresent){
-    
+    Serial.println("IR_Sensor,Inside if");
      personPresent = irSensorPresentCheck();
     
     }else if(analogRead(0) < sensorNotPresentHighLimit && analogRead(0) > sensorNotPresentLowLimit && personPresent){
@@ -161,10 +165,7 @@ boolean safeToTrigger(){
 /////////////////////////////////////////////////////////////////////////////
 boolean irSensorPresentCheck(){
   //limits - it need to be defined 
-  int sensorPresentHighLimit= 700;
-  int sensorPresentLowLimit=100;
-  int sensorNotPresentHighLimit=60;
-  int sensorNotPresentLowLimit=0;
+ 
   int IR_Sensor = analogRead(0);
   int i ;
   boolean present ;
@@ -203,10 +204,7 @@ boolean irSensorPresentCheck(){
 /////////////////////////////////////////////////////////////////////////////
 boolean irSensorNotPresentCheck(){
   //limits - it need to be defined above 
-  int sensorPresentHighLimit= 700;
-  int sensorPresentLowLimit=100;
-  int sensorNotPresentHighLimit=60;
-  int sensorNotPresentLowLimit=0;
+ 
    
   int i;
  for(i=0;i<300;i++){                                                                            // 2 seacond dealy and checking if person present
@@ -227,9 +225,12 @@ boolean nobodySeating(){
   boolean seating = false ;
   int sensorHighLimit = 11;
   int sensorLowLimit =7;
-  
-  if(analogRead(1)< sensorHighLimit && analogRead(1)> sensorLowLimt ){                     //check if somebody seating 
-    return flase ;
+  Serial.println("Pressure_Sensor,Function");
+  Serial.println(analogRead(1));
+  delay(500);
+  if(analogRead(1)> sensorHighLimit  || analogRead(1)==0){                     //check if somebody seating or seat is up  
+   Serial.println("Pressure_Sensor,Function");
+    return false ;
   }
   return true;                                                                            //retuen true if nobody seating
 }
