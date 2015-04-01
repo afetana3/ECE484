@@ -54,12 +54,12 @@ void loop() {
                                               //we are going to have check for sensor
                                               
      
-  digitalWrite(GREENLed, HIGH);   // turn the Green LED on (HIGH is the voltage level)
+  digitalWrite(GreenLed, HIGH);   // turn the Green LED on (HIGH is the voltage level)
 
-   if(safeToTrigger() && nobodySeating()  )                      // check for button or sensor 
+   if(buttonState== LOW || safeToTrigger() && nobodySeating()  )                      // check for button or sensor 
   {
     digitalWrite(GreenLed, LOW);    // turn the LED off by making the voltage LOW
-    digitalWrite(REDLed, HIGH);   // turn the LED on (HIGH is the voltage level)
+    digitalWrite(RedLed, HIGH);   // turn the LED on (HIGH is the voltage level)
     
     Serial.println("inside");
     closeLid();
@@ -68,7 +68,7 @@ void loop() {
     delay(1500);
     openLid();
     
-    digitalWrite(REDLed, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(RedLed, LOW);    // turn the LED off by making the voltage LOW
   }
   
 }

@@ -3,7 +3,7 @@
 int Button = 2;         // the number of the input pin
 int RedLed = 11;
 int GreenLed=12;
-int state = HIGH
+int state = HIGH;
 
 void setup()
 {
@@ -16,7 +16,7 @@ void loop()
 {
   if(digitalRead(Button)){              // toggle LED each time botton get pressed 
         state = ~state;
-        digitalWrite(REDLed, state);   
+        digitalWrite(RedLed, state);   
         digitalWrite(GreenLed, state); 
   }
 
