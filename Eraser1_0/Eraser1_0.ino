@@ -2,7 +2,7 @@
 //Cleaner Pins
 #define DIR_PIN_CLEANER 0
 #define STEP_PIN_CLEANER 1
-#define BUTTON_PIN 4
+#define BUTTON_PIN 2
 #define ENABLE_PIN_CLEANER 6
 //Lid Pins
 #define DIR_PIN_LID 7
@@ -15,6 +15,9 @@
 // speeds
 #define speed_delay_cleaner 350        // higher speed delay = lower speed 
 #define speed_delay_lid   450        // higher speed delay = lower speed
+//LED
+#define GreenLed 12
+#define RedLed 11
 
 //Initilization 
 int buttonState =0;                    //setting button state to be zero to make sure safe start
@@ -26,13 +29,15 @@ int sensorPresentHighLimit= 700;
 
 // setting up pins
 void setup() { 
-  
+  //LED
+  pinMode(RedLed, OUTPUT);     
+  pinMode(GreenLed,OUTPUT);
   // Cleaner Pin Initilization 
-  //pinMode(DIR_PIN_CLEANER, OUTPUT);                    //Direction PIN for Stepper motor  
-  //pinMode(STEP_PIN_CLEANER, OUTPUT);                   //Step pin for Stepper motor
- // pinMode(ENABLE_PIN_CLEANER,OUTPUT);                  //Enable pin for stepper motor
+  pinMode(DIR_PIN_CLEANER, OUTPUT);                    //Direction PIN for Stepper motor  
+  pinMode(STEP_PIN_CLEANER, OUTPUT);                   //Step pin for Stepper motor
+  pinMode(ENABLE_PIN_CLEANER,OUTPUT);                  //Enable pin for stepper motor
   
- // pinMode(BUTTON_PIN,INPUT);                           //Switch PIN     
+  pinMode(BUTTON_PIN,INPUT);                           //Switch PIN     
   
   // Lid Pin Initilization 
   pinMode(DIR_PIN_LID, OUTPUT);                        //Direction PIN for Stepper motor  
@@ -44,20 +49,26 @@ void setup() {
 }
 
 void loop() {    
-  //buttonState = digitalRead(BUTTON_PIN);      //Check for Switch
+  buttonState = digitalRead(BUTTON_PIN);      //Check for Switch
                                               
                                               //we are going to have check for sensor
                                               
      
-  
+  digitalWrite(GREENLed, HIGH);   // turn the Green LED on (HIGH is the voltage level)
+
    if(safeToTrigger() && nobodySeating()  )                      // check for button or sensor 
   {
+    digitalWrite(GreenLed, LOW);    // turn the LED off by making the voltage LOW
+    digitalWrite(REDLed, HIGH);   // turn the LED on (HIGH is the voltage level)
+    
     Serial.println("inside");
     closeLid();
     delay(1500);
-    //startCleaning();
-    delay(500);
+    startCleaning();
+    delay(1500);
     openLid();
+    
+    digitalWrite(REDLed, LOW);    // turn the LED off by making the voltage LOW
   }
   
 }
@@ -67,7 +78,7 @@ void loop() {
 //                          Open Lid
 ///////////////////////////////////////////////////////////////////////////
 void openLid(){  
-    rotateLid(1,HIGH);      //Number of rotation - Direction     **Change rotateLid function for more accurte lid movement
+    rotateLidUp(1,HIGH);      //Number of rotation - Direction     **Change rotateLid function for more accurte lid movement
 }
 ///////////////////////////////////////////////////////////////////////////
 //                          Close Lid
@@ -234,7 +245,23 @@ boolean nobodySeating(){
   }
   return true;                                                                            //retuen true if nobody seating
 }
-
+void rotateLidUp(int rotations ,int dir){  
+   
+    digitalWrite(ENABLE_PIN_LID,LOW);                    // Enable should be low for motor to start 
+    digitalWrite(DIR_PIN_LID,dir);                      //Setting up direction base on function input
+  
+    int steps = rotations*200*19.5;//calculating number of steps
+    // doing each stap and have a delay in between to make it slower 
+    for(int i=0; i < steps; i++)
+    { 
+      digitalWrite(STEP_PIN_LID, HIGH);                 // one step on 
+      delayMicroseconds(speed_delay_lid);                  // delay 
+      digitalWrite(STEP_PIN_LID, LOW);                //stop 
+      delayMicroseconds(speed_delay_lid);            //dealy
+    }  
+    
+  digitalWrite(ENABLE_PIN_LID,HIGH);  
+}
 
 
   

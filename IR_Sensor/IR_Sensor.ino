@@ -6,9 +6,9 @@ void setup()
 }
 void loop()
 {
-  x=analogRead(2);    //Read value form analog pin 2 
+  x=analogRead(0);    //Read value form analog pin 2 
   Serial.println(x);  //print the value in the screen
   
-  
+  delay(500);
    
 }
